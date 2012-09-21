@@ -22,6 +22,9 @@ World Setup
 path(bridge, e, office).	%there is a path from the bridge to the office moving east
 at(office, communicator).	%there is a communicator object in the office
 
+%of is just like at, but serves to map descriptions to location
+of(bridge, 'You are in the office!').
+
 
 i_am_at(bridge). 			%player's initial location
 
@@ -78,4 +81,9 @@ list_objects_at(X) :-
 
 list_objects_at(_).
 	
-describe(_) :- write('Generic room description.'), nl.
+describe(_) :- 
+	i_am_at(X),
+	of(X, Des),
+	write(Des), nl,
+	fail.
+
