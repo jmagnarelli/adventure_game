@@ -142,12 +142,20 @@ of(_, box_of_toothpicks, 'A box of countless toothpicks.  Mint flavored.').
 of(_, man, 'A large man, perhaps in his late twenties.  He has just \
 			begun to pick his nose. \n\n  He appears confused.').
 
+lights_off(6).
+lights_off(7).
+lights_off(8).
+lights_off(12).
+lights_off(13).
+lights_off(14).
+
 i_am_at(4). 			%player's initial location
 
 fed_spam_to_man(0).
 killed_crazed_man(0).
 kill_chase(0).
 man_transport(0).
+match_lit(0).
 
 %descriptions for the rooms
 
@@ -302,6 +310,16 @@ use_item(green_floppy_disk, computer, Des) :-
 	assert(path(4, 13, u)),
 	assert(path(5, 14, u)),	
 	Des is 'The computer beeps, and you hear the distant noise of metal panels sliding.'.
+use_item(matches, Des) :-
+	retract(match_lit(0)),
+	assert(match_lit(1)),
+	Des is 'You light the match, and the room comes into view.',
+	look.
+use_item(book_of_matches, Des) :-
+	retract(match_lit(0)),
+	assert(match_lit(1)),
+	Des is 'You light the match, and the room comes into view.',
+	look.
 
 
 /*
@@ -383,7 +401,11 @@ path(A, B, Dir) :-
 %Move - if the movement is valid, move the player.
 move(Dir) :-
 	
-	i_am_at(X),
+	(match_lit(1)
+	-> retract(match_lit(1)),
+	assert(match_lit(0)),
+	write('Your match burns out as you move between rooms.'), nl
+	;i_am_at(X),
 	path(X, Y, Dir),
 	retract(i_am_at(X)),
 	assert(i_am_at(Y)),
@@ -399,8 +421,11 @@ move(Dir) :-
 		 assert(at(crazed_man, X)),
 		 write('The crazed man is chasing you! He is only a room behind!'), nl
 		)
-	;look,
-	!).
+	;!)),
+	look,
+	!.
+
+
 	
 %Move - otherwise, tell the player they can't move.
 move(_) :-
@@ -452,14 +477,20 @@ examine(X) :-
 	
 
 
+room_is_dark(X) :-
+	lights_off(X),
+	match_lit(0).
 
 %Look - describe where in space the player is, list objects at the location
 look :-
 	i_am_at(X),
-	room_des(X, Des),
+	(room_is_dark(X)
+	-> write('The room is pitch black - you cannot see!'), nl
+	;room_des(X, Des),
 	write(Des), nl,
-	list_objects_at(X).	
-	list_paths_out(X).
+	list_objects_at(X),	
+	list_paths_out(X)
+	).
 
 i :-
 	inventory.
@@ -472,7 +503,7 @@ inventory :-
 %				in the location and writes them out.
 list_objects_at(X) :-
 	at(X, Obj),
-	write('There is a(n) '), write(Obj), write(' on the ground.'), nl,
+	write('There is a '), write(Obj), write(' in the room.'), nl,
 	fail.
 
 list_objects_at(_).
