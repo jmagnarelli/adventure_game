@@ -26,17 +26,8 @@ seen first should go in here. This one just prints out where you currently are i
 the world.
 */
 
-start :- write('Welcome to Prism.  This game has three difficulty settings. \
-				If you are playing this as a grader, and you are looking to finish \
-				the game very quickly, you may want to play on easy.  \
-				See the README for a list of features you\'ll miss out on \
-				when playing on easy. \n\n  Hints are available at any time \
-				through the help(). rule.  You are encouraged to play on a hard \
-				difficulty setting, if you have time.  Set the difficulty now by 
-				calling the set_diff(x) rule with an integer argument 0-2.  Higher \
-				is harder.  If you do not call set_diff, difficulty 0 is assumed.\n\n\
-				This is not quite the same as other text adventure games \
-				you may have played.  \n\n You may need a pencil and paper.'), nl,
+start :- write('Welcome to Prism.  
+				'), nl,
 		look.
 
 /*
@@ -52,12 +43,9 @@ path(2, 5, s).
 %path(2, 11, u).
 path(3, 4, e).
 path(3, 6, s).
-path(3, 12, u).
 path(4, 5, e).
 path(4, 7, s).
-path(4, 13, u).
 path(5, 8, s).
-path(5, 14, u).
 path(6, 7, e).
 %path(6, 15, u).
 path(7, 8, e).
@@ -100,13 +88,13 @@ movement_string(n, 'You open the hatch to the north, and crawl through.').
 movement_string(s, 'You open the hatch to the south, and crawl through.').
 
 
-of(_, rungs, 'They run up the center of each wall, directly to the hatches in the walls and ceiling. \
-				The rungs are small, but large enough to support a single hand or foot. \
-				You could climb them.').
-of(_, hatch, 'It's a square hatch, about 3 feet on each side.  There is a handle in the center \
+of(_, hatch, 'It\'s a square hatch, about 3 feet on each side.  There is a handle in the center \
 				that looks like it can be turned.  A small inscription is below the hatch.').
 of(_, panel, 'They are made of a thick material.  Through them, you can make out faint \
 				outlines of electrical components.').
+of(_, rungs, 'They run up the center of each wall, directly to the hatches in the walls and ceiling. \
+				The rungs are small, but large enough to support a single hand or foot. \
+				You could climb them.').
 
 
 of(0, inscription, 'The inscription reads 0 0 0.  It appears to be laser-etched.').
@@ -132,9 +120,9 @@ of(17, inscription, 'The inscription reads 2 2 1.  It appears to be laser-etched
 of(26, inscription, 'The inscription reads 2 2 2.  It appears to be laser-etched.').
 
 of(_, rubber_ducky, 'A small, cute, rubber ducky.  It squeaks when squeezed.').
+of(_, flashlight, 'Upon closer inspection, it doesn\'t seem to be working.').
 of(_, crazed_man, 'He is smelly, and is wearing tattered clothing.  He seems \
 					to be frothing at the mouth.  May be dangerous.').
-of(_, flashlight, 'Upon closer inspection, it doesn't seem to be working.').
 %of(_, book_of_matches, 'Wooden matches.  You count them, and find that .').
 of(_, spam, 'A delicious canned meat product!  The package claims that it is \'Family-sized\'.').
 of(_, computer, 'A large desktop computer is attached to the wall in the corner.  It is running.').
@@ -155,6 +143,11 @@ of(_, man, 'A large man, perhaps in his late twenties.  He has just \
 			begun to pick his nose. \n\n  He appears confused.').
 
 i_am_at(4). 			%player's initial location
+
+fed_spam_to_man(0).
+killed_crazed_man(0).
+kill_chase(0).
+man_transport(0).
 
 %descriptions for the rooms
 
@@ -220,7 +213,7 @@ cant_pick_up(dillon, 'He quite large and muscular, probably too large for you to
 %what can be used with what?
 usable(rubber_ducky).
 usable(spam, man).
-usable(rubber_ducky, man).
+usable(rubber_ducky, old_woman).
 usable(green_floppy_disk, computer).
 usable(white_floppy_disk, computer).
 usable(black_floppy_disk, computer).
@@ -236,41 +229,36 @@ usable(extension_cord).
 usable(old_woman).
 usable(man).
 usable(box_of_toothpicks).
+usable(box_of_toothpicks, man) :-
+	fed_spam_to_man(1).
 
-usable(box_of_toothpicks, man) :=
-	fed_spam_to_man().
 
 %what happens when we use these things with each other?
 use_item(ripe_banana, Des) :-
 	Des is 'You eat the banana.  Yum!'.
-
 use_item(rusty_spoon, crazed_man, Des) :-
-	assert((killed_crazed_man()),
+	retract(killed_crazed_man(0)),
+	assert(killed_crazed_man(1)),
 	Des is 'You fight off the crazed man using only your rusty spoon. \n\n\
 			The details are best left unspecified.'.
-
 use_item(spam, Des) :-
 	Des is 'You eat a little of the Spam.  It tastes about as you would expect it to.'.
-
 use_item(rubber_ducky, Des) :-
 	Des is 'QUACK!'.
-
 use_item(crazed_man, Des) :-
-	assert(kill_chase()),
+	retract(kill_chase(0)),
+	assert(kill_chase(1)),
 	Des is 'The man lunges at you. He is attacking!'.
-
 use_item(computer, Des) :-
 	Des is 'Awaiting input media...'.
-
 use_item(extension_cord, scaffold_apparatus, Des) :-
 	Des is 'You plug in the apparatus, which begins deploying a walkway to the outer wall.  \
 			When it has reached the far side, you and Dillon eagerly make your way across the chasm \
 			and to the exterior door beyond which, hopefully, freedom awaits...\n\n\n YOU WIN!'.
 use_item(old_woman, Des) :-
 	Des is 'She begins ranting: \'Nowayoutnowayout NO WAY OUT. Why? WHERE?  ROOMSroomsrooms so many rooms...\''.
-
 use_item(man, Des) :-
-	(man_transport()
+	(man_transport(1)
 	-> 
 		(i_am_at(17)
 		->retract(i_am_at(17)),
@@ -294,22 +282,27 @@ use_item(man, Des) :-
 use_item(box_of_toothpicks, Des) :-
 	Des is 'You take one of the toothpicks and put it in your mouth.  You work it between your teeth \
 			as you walk.'.
-	
 use_item(spam, man, Des) :-
-	assert(fed_spam_to_man()),
+	retract(fed_spam_to_man(0)),
+	assert(fed_spam_to_man(1)),
 	Des is 'With an ear-to-ear grin, he tears open the can and slides the entire \
 			brick of spam into his mouth.  Happily, he chews if for a minute or so. \n\n\
 			After swallowing, he begins picking at his teeth.  He seems to be growing more \
 			frustrated by the second.'.
 use_item(box_of_toothpicks, man, Des) :-
-	assert(man_transport()),
+	fed_spam_to_man(1),
+	retract(man_transport(0)),
+	assert(man_transport(1)),
 	Des is 'The man says to you \'I am happy now.  Use me to get to the different place\''.
-
 use_item(rubber_ducky, old_woman, Des) :-
 	Des is 'She snatches the ducky from you and stuffs it into her pocket. \
 			Her look makes it clear that you will not be getting it back.'.
+use_item(green_floppy_disk, computer, Des) :-
+	assert(path(3, 12, u)),
+	assert(path(4, 13, u)),
+	assert(path(5, 14, u)),	
+	Des is 'The computer beeps, and you hear the distant noise of metal panels sliding.'.
 
-use_item(
 
 /*
 Verbs
@@ -358,7 +351,7 @@ consume(A, B) :-
 	
 	
 use(A, B) :-
-	(usable(A, B),
+	(usable(A, B)
 	->reachable(A),
 	reachable(B),
 	use_item(A, B, Des),
@@ -369,7 +362,7 @@ use(A, B) :-
 	).
 
 use(A) :-
-	(usable(A),
+	(usable(A)
 	->reachable(A),
 	use_item(A, Des),
 	consume(A),
@@ -383,32 +376,31 @@ use(A) :-
 %Each room is a 3-element list representing the room's x, y, z coordinates.
 %A is source, B is dest, dir is one of N, S, E, W, U, D
 path(A, B, Dir) :-
-	path(A, B, Dir).
-path(A, B, Dir) :-
 	opp_dir(Dir, Opp_Dir),
-	path(B, A, Opp_Dir).
+	path(B, A, Opp_Dir),
+	!.
 
 %Move - if the movement is valid, move the player.
 move(Dir) :-
 	
 	i_am_at(X),
-	path(X, Dir, Y),
+	path(X, Y, Dir),
 	retract(i_am_at(X)),
 	assert(i_am_at(Y)),
 	movement_string(Dir, Str),
 	write(Str), nl,
-	(kill_chase()
+	(kill_chase(1)
 	->
 		(at(crazed_man, X)
 		%we're where the crazy man is 
 		->write('You were caught by the crazed man, who proceeds to kill you. \n\nGAME OVER. Please restart.')
 		;at(crazed_man, A),
 		 retract(at(crazed_man, A)),
-		 assert(at(crazed_man, X)).
+		 assert(at(crazed_man, X)),
+		 write('The crazed man is chasing you! He is only a room behind!'), nl
 		)
 	;look,
-	!
-	).
+	!).
 	
 %Move - otherwise, tell the player they can't move.
 move(_) :-
@@ -433,11 +425,11 @@ pickup(X) :-
 %Pick up object - if in the right location and movable, pick it up and remove it from the ground.
 pickup(X) :-
 	i_am_at(Place),
-	at(Place, X, Des0),
+	at(Place, X),
 	\+ cant_pick_up(X, Des1),
-	retract(at(Place, X, Des0)),
-	assert(at(inventory, X, Des0)),
-	write('You have picked up the'), write(X), nl,
+	retract(at(Place, X)),
+	assert(at(inventory, X)),
+	write('You have picked up the '), write(X), nl,
 	!.
 	
 %Pick up object - otherwise, cannot pick up the object.
@@ -467,11 +459,12 @@ look :-
 	room_des(X, Des),
 	write(Des), nl,
 	list_objects_at(X).	
+	list_paths_out(X).
 
-i() :-
-	inventory().
+i :-
+	inventory.
 
-inventory() :-
+inventory :-
 	at(inventory, Obj),
 	write('You are carrying a(n) '), write(Obj), nl.
 
@@ -484,12 +477,21 @@ list_objects_at(X) :-
 
 list_objects_at(_).
 
-%list features - these two rules loop through each feature of the rooms in question
-list_features_of(X) :-
-	of(X, Feat, Des),
-	write(Des), nl,
+%List objects - these two rules effectively form a loop that go through every object
+%				in the location and writes them out.
+list_paths_out(X) :-
+	path(X, A, Dir),
+	write('From here, you can move  '), write(Dir), nl,
 	fail.
 
-list_features_of(_).
+list_paths_out(_).
+
+%list features - these two rules loop through each feature of the rooms in question
+%list_features_of(X) :-
+%	of(X, Feat, Des),
+%	write(Des), nl,
+%	fail.
+%
+%list_features_of(_).
 	
 
