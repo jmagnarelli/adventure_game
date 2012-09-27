@@ -15,7 +15,7 @@ route :-
 */	
 
 
-:- dynamic i_am_at/1, at/2, holding/1.
+:- dynamic i_am_at/1, at/2, holding/1, match_lit/1, count/2.
 :- retractall(at(_, _)), 
 	retractall(i_am_at(_)), 
 	retractall(holding(_)).
@@ -26,8 +26,7 @@ seen first should go in here. This one just prints out where you currently are i
 the world.
 */
 
-start :- write('Welcome to Prism.  
-				'), nl,
+start :- write('Welcome to Prism.'), nl,
 		look.
 
 /*
@@ -78,10 +77,10 @@ opp_dir(d, u).
 
 
 movement_string(u, 'You climb up the small ladder running up the wall and across the ceiling. \
-					with great effort, you heave yourself through the hatch in the ceiling, emerging \
-					through the floor of another room.').
+with great effort, you heave yourself through the hatch in the ceiling, emerging \
+through the floor of another room.').
 movement_string(d, 'You gingerly lower yourself through the hatch in the floor, straining as you \
-					make your way to the wall and down the rungs of the ladder there.').
+make your way to the wall and down the rungs of the ladder there.').
 movement_string(e, 'You open the hatch to the east, and crawl through.').
 movement_string(w, 'You open the hatch to the west, and crawl through.').
 movement_string(n, 'You open the hatch to the north, and crawl through.').
@@ -89,12 +88,12 @@ movement_string(s, 'You open the hatch to the south, and crawl through.').
 
 
 of(_, hatch, 'It\'s a square hatch, about 3 feet on each side.  There is a handle in the center \
-				that looks like it can be turned.  A small inscription is below the hatch.').
+that looks like it can be turned.  A small inscription is below the hatch.').
 of(_, panel, 'They are made of a thick material.  Through them, you can make out faint \
-				outlines of electrical components.').
+outlines of electrical components.').
 of(_, rungs, 'They run up the center of each wall, directly to the hatches in the walls and ceiling. \
-				The rungs are small, but large enough to support a single hand or foot. \
-				You could climb them.').
+The rungs are small, but large enough to support a single hand or foot. \
+You could climb them.').
 
 
 of(0, inscription, 'The inscription reads 0 0 0.  It appears to be laser-etched.').
@@ -122,8 +121,8 @@ of(26, inscription, 'The inscription reads 2 2 2.  It appears to be laser-etched
 of(_, rubber_ducky, 'A small, cute, rubber ducky.  It squeaks when squeezed.').
 of(_, flashlight, 'Upon closer inspection, it doesn\'t seem to be working.').
 of(_, crazed_man, 'He is smelly, and is wearing tattered clothing.  He seems \
-					to be frothing at the mouth.  May be dangerous.').
-%of(_, book_of_matches, 'Wooden matches.  You count them, and find that .').
+to be frothing at the mouth.  May be dangerous.').
+of(_, box_of_matches, 'Wooden matches.  You count them, and find that .').
 of(_, spam, 'A delicious canned meat product!  The package claims that it is \'Family-sized\'.').
 of(_, computer, 'A large desktop computer is attached to the wall in the corner.  It is running.').
 of(_, black_floppy_disk, 'A black floppy disk.  It is not labeled.').
@@ -137,10 +136,10 @@ of(_, suspicious_can, 'It seems to be an old gas can.  A sniff confirms this sus
 of(_, extension_cord, 'About 100 feet of 3-pronged extension cord.').
 of(_, old_woman, 'She is muttering to herself, sitting against the far wall.').
 of(_, rusty_spoon, 'An old, rusty, tablespoon.').
-%of(_, matches, 'A small, cute, rubber ducky.  It squeaks when squeezed.').
+of(_, book_of_matches, 'A regular book of matches.  The bendy kind.').
 of(_, box_of_toothpicks, 'A box of countless toothpicks.  Mint flavored.').
 of(_, man, 'A large man, perhaps in his late twenties.  He has just \
-			begun to pick his nose. \n\n  He appears confused.').
+begun to pick his nose. \n\n  He appears confused.').
 
 lights_off(6).
 lights_off(7).
@@ -161,9 +160,9 @@ match_lit(0).
 
 %generic description
 room_des(_, 'You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are gleaming, \
-			translucent, white panels.  There is a hatch in the center of each wall, the \
-			ceiling, and the floor.  There is a series of rungs set into the \
-			 middle of  each wall, the ceiling, and the floor.').
+translucent, white panels.  There is a hatch in the center of each wall, the \
+ceiling, and the floor.  There is a series of rungs set into the \
+middle of  each wall, the ceiling, and the floor.').
 
 at(0, rubber_ducky).
 at(2, crazed_man).
@@ -209,14 +208,17 @@ no_consumption(box_of_toothpicks).
 partial_consumption(book_of_matches).
 partial_consumption(box_of_matches).
 
+count(book_of_matches, 5).
+count(box_of_matches, 7).
+
 cant_pick_up(computer, 'That is too bulky for you to carry.').
 cant_pick_up(crazed_man, 'He snarls at you, and shoves you away with \
-						calloused, grubby hands').
+calloused, grubby hands').
 cant_pick_up(charred_remains, 'You cannot bring yourself to do that.').
 cant_pick_up(old_woman, 'She mumbles as you try to pick her up, but you find that\
-						 she is too heavy').
+she is too heavy').
 cant_pick_up(dillon, 'He quite large and muscular, probably too large for you to carry. \
-					You try to pick him up anyway.  He whimpers and cries, so you put him down.').
+You try to pick him up anyway.  He whimpers and cries, so you put him down.').
 
 %what can be used with what?
 usable(rubber_ducky).
@@ -237,34 +239,36 @@ usable(extension_cord).
 usable(old_woman).
 usable(man).
 usable(box_of_toothpicks).
+usable(book_of_matches).
+usable(box_of_matches).
 usable(box_of_toothpicks, man) :-
 	fed_spam_to_man(1).
 
 
 %what happens when we use these things with each other?
 use_item(ripe_banana, Des) :-
-	Des is 'You eat the banana.  Yum!'.
+	Des = 'You eat the banana.  Yum!'.
 use_item(rusty_spoon, crazed_man, Des) :-
 	retract(killed_crazed_man(0)),
 	assert(killed_crazed_man(1)),
-	Des is 'You fight off the crazed man using only your rusty spoon. \n\n\
-			The details are best left unspecified.'.
+	Des = 'You fight off the crazed man using only your rusty spoon. \n\n\
+The details are best left unspecified.'.
 use_item(spam, Des) :-
-	Des is 'You eat a little of the Spam.  It tastes about as you would expect it to.'.
+	Des = 'You eat a little of the Spam.  It tastes about as you would expect it to.'.
 use_item(rubber_ducky, Des) :-
-	Des is 'QUACK!'.
+	Des = 'QUACK!'.
 use_item(crazed_man, Des) :-
 	retract(kill_chase(0)),
 	assert(kill_chase(1)),
-	Des is 'The man lunges at you. He is attacking!'.
+	Des = 'The man lunges at you. He is attacking!'.
 use_item(computer, Des) :-
-	Des is 'Awaiting input media...'.
+	Des = 'Awaiting input media...'.
 use_item(extension_cord, scaffold_apparatus, Des) :-
-	Des is 'You plug in the apparatus, which begins deploying a walkway to the outer wall.  \
-			When it has reached the far side, you and Dillon eagerly make your way across the chasm \
-			and to the exterior door beyond which, hopefully, freedom awaits...\n\n\n YOU WIN!'.
+	Des = 'You plug in the apparatus, which begins deploying a walkway to the outer wall.  \
+When it has reached the far side, you and Dillon eagerly make your way across the chasm \
+and to the exterior door beyond which, hopefully, freedom awaits...\n\n\n YOU WIN!'.
 use_item(old_woman, Des) :-
-	Des is 'She begins ranting: \'Nowayoutnowayout NO WAY OUT. Why? WHERE?  ROOMSroomsrooms so many rooms...\''.
+	Des = 'She begins ranting: \'Nowayoutnowayout NO WAY OUT. Why? WHERE?  ROOMSroomsrooms so many rooms...\''.
 use_item(man, Des) :-
 	(man_transport(1)
 	-> 
@@ -283,42 +287,42 @@ use_item(man, Des) :-
 		write('The man exclaims, \'Wheeeeeeee!\''), nl,
 		look,
 		!)
-	; Des is 'He looks up at you, index finger knuckle deep in his left nostril, and speaks: \'\
-			Hi! My name\'s Dillon. Nice ta meet ya I guess.  \n\n I have a special place I like to \
-			go to when I feel happy.  But I don\'t feel happy now...'
+	; Des = 'He looks up at you, index finger knuckle deep in his left nostril, and speaks: \'\
+Hi! My name\'s Dillon. Nice ta meet ya I guess.  \n\n I have a special place I like to \
+go to when I feel happy.  But I don\'t feel happy now...'
 	).
 use_item(box_of_toothpicks, Des) :-
-	Des is 'You take one of the toothpicks and put it in your mouth.  You work it between your teeth \
-			as you walk.'.
+	Des = 'You take one of the toothpicks and put it in your mouth.  You work it between your teeth \
+as you walk.'.
 use_item(spam, man, Des) :-
 	retract(fed_spam_to_man(0)),
 	assert(fed_spam_to_man(1)),
-	Des is 'With an ear-to-ear grin, he tears open the can and slides the entire \
-			brick of spam into his mouth.  Happily, he chews if for a minute or so. \n\n\
-			After swallowing, he begins picking at his teeth.  He seems to be growing more \
-			frustrated by the second.'.
+	Des = 'With an ear-to-ear grin, he tears open the can and slides the entire \
+brick of spam into his mouth.  Happily, he chews if for a minute or so. \n\n\
+After swallowing, he begins picking at his teeth.  He seems to be growing more \
+frustrated by the second.'.
 use_item(box_of_toothpicks, man, Des) :-
 	fed_spam_to_man(1),
 	retract(man_transport(0)),
 	assert(man_transport(1)),
-	Des is 'The man says to you \'I am happy now.  Use me to get to the different place\''.
+	Des = 'The man says to you \'I am happy now.  Use me to get to the different place\''.
 use_item(rubber_ducky, old_woman, Des) :-
-	Des is 'She snatches the ducky from you and stuffs it into her pocket. \
-			Her look makes it clear that you will not be getting it back.'.
+	Des = 'She snatches the ducky from you and stuffs it into her pocket. \
+Her look makes it clear that you will not be getting it back.'.
 use_item(green_floppy_disk, computer, Des) :-
 	assert(path(3, 12, u)),
 	assert(path(4, 13, u)),
 	assert(path(5, 14, u)),	
-	Des is 'The computer beeps, and you hear the distant noise of metal panels sliding.'.
-use_item(matches, Des) :-
+	Des = 'The computer beeps, and you hear the distant noise of metal panels sliding.'.
+use_item(box_of_matches, Des) :-
 	retract(match_lit(0)),
 	assert(match_lit(1)),
-	Des is 'You light the match, and the room comes into view.',
+	Des = 'You light the match, and the room comes into view.',
 	look.
 use_item(book_of_matches, Des) :-
 	retract(match_lit(0)),
 	assert(match_lit(1)),
-	Des is 'You light the match, and the room comes into view.',
+	Des = 'You light the match, and the room comes into view.',
 	look.
 
 
@@ -344,7 +348,8 @@ consume(A) :-
 	n > 0,
 	M is N-1,
 	retract(count(A, N)),
-	assert(count(A, M))
+	assert(count(A, M)),
+	write('You have '), write(M), write(' remaining.'), nl
 	;no_consumption(A)
 	)
 	).
@@ -393,7 +398,10 @@ use(A) :-
 %Path - is there a path between the two rooms in the given direction?
 %Each room is a 3-element list representing the room's x, y, z coordinates.
 %A is source, B is dest, dir is one of N, S, E, W, U, D
-path(A, B, Dir) :-
+is_path(A, B, Dir) :-
+	path(A, B, Dir),
+	!.
+is_path(A, B, Dir) :-
 	opp_dir(Dir, Opp_Dir),
 	path(B, A, Opp_Dir),
 	!.
@@ -406,7 +414,7 @@ move(Dir) :-
 	assert(match_lit(0)),
 	write('Your match burns out as you move between rooms.'), nl
 	;i_am_at(X),
-	path(X, Y, Dir),
+	is_path(X, Y, Dir),
 	retract(i_am_at(X)),
 	assert(i_am_at(Y)),
 	movement_string(Dir, Str),
@@ -429,8 +437,8 @@ move(Dir) :-
 	
 %Move - otherwise, tell the player they can't move.
 move(_) :-
-	write('Try as you might to turn the handle, it won\t budge. You can\'t \
-			go this way.'), nl.
+	write('Try as you might to turn the handle, it won\'t budge. You can\'t \
+go this way.'), nl.
 	
 %Pick up object - if already holding the object, can't pick it up!
 pickup(X) :-
@@ -463,11 +471,7 @@ pickup(_) :-
 
 examine(X) :-
 	i_am_at(Loc),
-	at(Loc, X, Des),
-	write(Des), nl.
-%if it is in the player's inventory
-examine(X) :-
-	at(-1, X, Des),
+	of(Loc, X, Des),
 	write(Des), nl.
 
 examine(X) :-
@@ -490,7 +494,7 @@ look :-
 	write(Des), nl,
 	list_objects_at(X),	
 	list_paths_out(X)
-	).
+	), !.
 
 i :-
 	inventory.
@@ -511,7 +515,7 @@ list_objects_at(_).
 %List objects - these two rules effectively form a loop that go through every object
 %				in the location and writes them out.
 list_paths_out(X) :-
-	path(X, A, Dir),
+	is_path(X, A, Dir),
 	write('From here, you can move  '), write(Dir), nl,
 	fail.
 
