@@ -15,7 +15,7 @@ route :-
 */	
 
 
-:- dynamic i_am_at/1, at/2, holding/1, match_lit/1, count/2.
+:- dynamic i_am_at/1, at/2, holding/1, match_lit/1, count/2, kill_chase/1, path/3 .
 :- retractall(at(_, _)), 
 	retractall(i_am_at(_)), 
 	retractall(holding(_)).
@@ -249,8 +249,8 @@ usable(box_of_toothpicks, man) :-
 use_item(ripe_banana, Des) :-
 	Des = 'You eat the banana.  Yum!'.
 use_item(rusty_spoon, crazed_man, Des) :-
-	retract(killed_crazed_man(0)),
-	assert(killed_crazed_man(1)),
+	retract(kill_chase(1)),
+	assert(kill_chase(0)),
 	Des = 'You fight off the crazed man using only your rusty spoon. \n\n\
 The details are best left unspecified.'.
 use_item(spam, Des) :-
@@ -345,14 +345,14 @@ consume(A) :-
 	;(partial_consumption(A)
 	->reachable(A),
 	count(A, N),
-	n > 0,
+	N > 0,
 	M is N-1,
 	retract(count(A, N)),
 	assert(count(A, M)),
 	write('You have '), write(M), write(' remaining.'), nl
 	;no_consumption(A)
 	)
-	).
+	),!.
 
 consume(A, B) :-
 	(total_consumption(A, B)
@@ -382,7 +382,7 @@ use(A, B) :-
 	consume(B, A),
 	write(Des), nl
 	;write('You cannot use '), write(A), write(' with '), write(B), nl
-	).
+	),!.
 
 use(A) :-
 	(usable(A)
@@ -391,7 +391,7 @@ use(A) :-
 	consume(A),
 	write(Des), nl
 	;write('You cannot use '), write(A), nl
-	).
+	),!.
 	
 	
 
@@ -399,21 +399,16 @@ use(A) :-
 %Each room is a 3-element list representing the room's x, y, z coordinates.
 %A is source, B is dest, dir is one of N, S, E, W, U, D
 is_path(A, B, Dir) :-
-	path(A, B, Dir),
-	!.
+	path(A, B, Dir).
 is_path(A, B, Dir) :-
 	opp_dir(Dir, Opp_Dir),
-	path(B, A, Opp_Dir),
-	!.
+	path(B, A, Opp_Dir).
+is_path(_, _, _) :- fail.
 
 %Move - if the movement is valid, move the player.
 move(Dir) :-
 	
-	(match_lit(1)
-	-> retract(match_lit(1)),
-	assert(match_lit(0)),
-	write('Your match burns out as you move between rooms.'), nl
-	;i_am_at(X),
+	i_am_at(X),
 	is_path(X, Y, Dir),
 	retract(i_am_at(X)),
 	assert(i_am_at(Y)),
@@ -421,15 +416,20 @@ move(Dir) :-
 	write(Str), nl,
 	(kill_chase(1)
 	->
-		(at(crazed_man, X)
+		(at(Y, crazed_man)
 		%we're where the crazy man is 
-		->write('You were caught by the crazed man, who proceeds to kill you. \n\nGAME OVER. Please restart.')
-		;at(crazed_man, A),
-		 retract(at(crazed_man, A)),
-		 assert(at(crazed_man, X)),
-		 write('The crazed man is chasing you! He is only a room behind!'), nl
+		->write('\n\n\nYou were caught by the crazed man, who proceeds to kill you. \nGAME OVER. PLEASE RESTART.\n\n\n')
+		;at(A, crazed_man),
+		 retract(at(A, crazed_man)),
+		 assert(at(X, crazed_man)),
+		 write('\nThe crazed man is chasing you! He is only a room behind!\n'), nl
 		)
-	;!)),
+	;!),
+	(match_lit(1)
+	-> retract(match_lit(1)),
+	assert(match_lit(0)),
+	write('Your match burns out as you move between rooms.'), nl
+	;!),
 	look,
 	!.
 
@@ -472,12 +472,12 @@ pickup(_) :-
 examine(X) :-
 	i_am_at(Loc),
 	of(Loc, X, Des),
-	write(Des), nl.
+	write(Des), nl, !.
 
 examine(X) :-
 	i_am_at(Loc),
 	of(Loc, X, Des),
-	write(Des), nl.
+	write(Des), nl, !.
 	
 
 
@@ -501,7 +501,8 @@ i :-
 
 inventory :-
 	at(inventory, Obj),
-	write('You are carrying a(n) '), write(Obj), nl.
+	write('You are carrying a(n) '), write(Obj), nl,
+	fail.
 
 %List objects - these two rules effectively form a loop that go through every object
 %				in the location and writes them out.
@@ -516,7 +517,7 @@ list_objects_at(_).
 %				in the location and writes them out.
 list_paths_out(X) :-
 	is_path(X, A, Dir),
-	write('From here, you can move  '), write(Dir), nl,
+	write('From here, you can move '), write(Dir), nl,
 	fail.
 
 list_paths_out(_).
