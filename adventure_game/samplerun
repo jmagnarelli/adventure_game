@@ -1,0 +1,721 @@
+jimbo@ubuntu:~/code/CS4100$ prolog
+Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 5.10.4)
+Copyright (c) 1990-2011 University of Amsterdam, VU Amsterdam
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+?- ['prism.pl'].
+Warning: /home/jimbo/code/CS4100/prism.pl:222:
+	Clauses of total_consumption/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:238:
+	Clauses of total_consumption/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:260:
+	Clauses of usable/1 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:261:
+	Clauses of usable/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:262:
+	Clauses of usable/1 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:276:
+	Clauses of usable/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:288:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:298:
+	Clauses of use_item/3 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:303:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:330:
+	Clauses of use_item/3 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:350:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:493:
+	Singleton variables: [Des1]
+Warning: /home/jimbo/code/CS4100/prism.pl:552:
+	Singleton variables: [A]
+% prism.pl compiled 0.01 sec, 54,928 bytes
+true.
+
+?- start.
+Welcome to Prism, a simple adventure game written in Prolog. 
+First run the 'start' rule, then move about with the 'move(<direction>)' rule, 
+where direction is one of n, s, e, w, u, or d.  Movement is allowed in six directions in Prism. 
+You can examine just about anything in the game with the 'examine(<item>)' rule, and you can pick 
+up items with the 'take(<item>)' rule.  Your inventory can be printed with the 'i' rule or the 
+'inventory' rule.  You can use items with the 'use(<item>)' rule, and can use an item that you 
+are carrying with another item via the 'use(<item1>, <item2>)' rule, so long as the inventory item 
+is given as the first parameter.  The use rule also allows you to talk to characters in the game. 
+You can look about with the 'look' rule.  Have fun.
+
+
+
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a book_of_matches in the room.
+From here, you can move e
+From here, you can move s
+From here, you can move w
+From here, you can move n
+true.
+
+?- 
+% halt
+jimbo@ubuntu:~/code/CS4100$ exit
+
+jimbo@ubuntu:~/code/CS4100$ prolog
+Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 5.10.4)
+Copyright (c) 1990-2011 University of Amsterdam, VU Amsterdam
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+?- ['prism.pl'].
+Warning: /home/jimbo/code/CS4100/prism.pl:222:
+	Clauses of total_consumption/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:238:
+	Clauses of total_consumption/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:260:
+	Clauses of usable/1 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:261:
+	Clauses of usable/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:262:
+	Clauses of usable/1 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:276:
+	Clauses of usable/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:288:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:298:
+	Clauses of use_item/3 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:303:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:330:
+	Clauses of use_item/3 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:350:
+	Clauses of use_item/2 are not together in the source-file
+Warning: /home/jimbo/code/CS4100/prism.pl:493:
+	Singleton variables: [Des1]
+Warning: /home/jimbo/code/CS4100/prism.pl:552:
+	Singleton variables: [A]
+% prism.pl compiled 0.00 sec, 54,904 bytes
+true.
+
+?- start.
+Welcome to Prism, a simple adventure game written in Prolog. 
+You can move about with the 'move(<direction>)' rule, 
+where direction is one of n, s, e, w, u, or d.  Movement is allowed in six directions in Prism. 
+You can examine just about anything in the game with the 'examine(<item>)' rule, and you can pick 
+up items with the 'take(<item>)' rule.  Your inventory can be printed with the 'i' rule or the 
+'inventory' rule.  You can use items with the 'use(<item>)' rule, and can use an item that you 
+are carrying with another item via the 'use(<item1>, <item2>)' rule, so long as the inventory item 
+is given as the first parameter.  The use rule also allows you to talk to characters in the game. 
+You can look about with the 'look' rule.  Have fun.
+
+
+
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a book_of_matches in the room.
+From here, you can move e
+From here, you can move s
+From here, you can move w
+From here, you can move n
+true.
+
+?- take(book_of_matches).
+You have picked up the book_of_matches
+true.
+
+?- move(e).
+You open the hatch to the east, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move s
+From here, you can move w
+From here, you can move n
+true.
+
+?- examine(hatch).
+It's a square hatch, about 3 feet on each side.  There is a handle in the center 
+that looks like it can be turned.  A small inscription is below the hatch.
+true.
+
+?- examine(inscription).
+The inscription reads 2 1 0.  It appears to be laser-etched.
+true.
+
+?- move(s).
+You open the hatch to the south, and crawl through.
+The room is pitch black - you cannot see!
+true.
+
+?- use(book_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels. There is a foul odor in the room.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a slip_of_paper in the room.
+There is a charred_remains in the room.
+There is a floppy_disk in the room.
+There is a ripe_banana in the room.
+There is a suspicious_can in the room.
+From here, you can move w
+From here, you can move n
+book_of_matches: 4 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- examine(slip_of_paper).
+The note is singed around the edges.  It reads 'NO WAY OUT'
+true.
+
+?- examine(charred_remains).
+You cannot bring yourself to look at them - the stench is bad enough.
+true.
+
+?- take(floppy_disk).
+You have picked up the floppy_disk
+true.
+
+?- take(ripe_banana).
+You have picked up the ripe_banana
+true.
+
+?- take(charred_remains).
+You cannot bring yourself to do that.
+true.
+
+?- move(w).
+You open the hatch to the west, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- use(book_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a computer in the room.
+From here, you can move e
+From here, you can move w
+From here, you can move n
+book_of_matches: 3 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- examine(computer).
+A large desktop computer is attached to the wall in the corner.  It is running.
+true.
+
+?- use(computer).
+Awaiting input media...
+true.
+
+?- i.
+You are carrying a(n) book_of_matches
+You are carrying a(n) floppy_disk
+You are carrying a(n) ripe_banana
+false.
+
+?- use(floppy_disk, computer).
+The computer beeps, and you hear the distant noise of metal panels sliding.
+true.
+
+?- use(ripe_banana).
+You eat the banana.  Yum!
+true.
+
+?- move(w).
+You open the hatch to the west, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- use(book_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a spam in the room.
+From here, you can move e
+From here, you can move n
+book_of_matches: 2 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- take(spam).
+You have picked up the spam
+true.
+
+?- examine(spam).
+A delicious canned meat product!  The package claims that it is 'Family-sized'.
+true.
+
+?- move(n).
+You open the hatch to the north, and crawl through.
+Your match burns out as you move between rooms.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a flashlight in the room.
+From here, you can move e
+From here, you can move s
+From here, you can move u
+From here, you can move n
+true.
+
+?- examine(flashlight).
+Upon closer inspection, it doesn't seem to be working.
+true.
+
+?- take(flashlight).
+You have picked up the flashlight
+true.
+
+?- examine(hatch).
+It's a square hatch, about 3 feet on each side.  There is a handle in the center 
+that looks like it can be turned.  A small inscription is below the hatch.
+true.
+
+?- examine(inscription).
+The inscription reads 0 1 0.  It appears to be laser-etched.
+true.
+
+?- move(n).
+You open the hatch to the north, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a rubber_ducky in the room.
+From here, you can move e
+From here, you can move s
+true.
+
+?- examine(rubber_ducky).
+A small, cute, rubber ducky.  It squeaks when squeezed.
+true.
+
+?- take(rubber_ducky).
+You have picked up the rubber_ducky
+true.
+
+?- move(e).
+You open the hatch to the east, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, purple panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move e
+From here, you can move s
+From here, you can move w
+true.
+
+?- examine(inscription).
+The inscription reads 1 0 0.  It appears to be laser-etched.
+true.
+
+?- move(e).
+You open the hatch to the east, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, red panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a crazed_man in the room.
+From here, you can move s
+From here, you can move w
+true.
+
+?- examine(crazed_man).
+He is smelly, and is wearing tattered clothing.  He seems 
+to be frothing at the mouth.  May be dangerous.
+true.
+
+?- move(s).
+You open the hatch to the south, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move s
+From here, you can move u
+From here, you can move w
+From here, you can move n
+true.
+
+?- i.
+You are carrying a(n) book_of_matches
+You are carrying a(n) spam
+You are carrying a(n) flashlight
+You are carrying a(n) rubber_ducky
+false.
+
+?- move(s).
+You open the hatch to the south, and crawl through.
+The room is pitch black - you cannot see!
+true.
+
+?- use(book_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels. There is a foul odor in the room.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a slip_of_paper in the room.
+There is a charred_remains in the room.
+There is a suspicious_can in the room.
+From here, you can move w
+From here, you can move n
+book_of_matches: 1 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- move(w).
+You open the hatch to the west, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- move(n).
+You open the hatch to the north, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move e
+From here, you can move s
+From here, you can move u
+From here, you can move w
+From here, you can move n
+true.
+
+?- move(u).
+You climb up the small ladder running up the wall and across the ceiling. 
+with great effort, you heave yourself through the hatch in the ceiling, emerging 
+through the floor of another room.
+The room is pitch black - you cannot see!
+true.
+
+?- use(book_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a rusty_spoon in the room.
+There is a box_of_matches in the room.
+From here, you can move e
+From here, you can move w
+From here, you can move d
+book_of_matches: 0 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- take(box_of_matches).
+You have picked up the box_of_matches
+true.
+
+?- take(rusty_spoon).
+You have picked up the rusty_spoon
+true.
+
+?- examine(rusty_spoon).
+An old, rusty, tablespoon.
+true.
+
+?- examine(box_of_matches).
+Wooden matches.
+true.
+
+?- move(w).
+You open the hatch to the west, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- use(box_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a extension_cord in the room.
+There is a old_woman in the room.
+From here, you can move e
+From here, you can move d
+box_of_matches: 6 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- examine(old_woman).
+She is muttering to herself, sitting against the far wall.
+true.
+
+?- use(old_woman).
+She begins ranting: 'Nowayoutnowayout NO WAY OUT. Why? WHERE?  ROOMSroomsrooms so many rooms...'
+true.
+
+?- examine(extension_cord).
+About 100 feet of 3-pronged extension cord.
+true.
+
+?- use(rubber_ducky, old_woman).
+She snatches the ducky from you and stuffs it into her pocket. 
+Her look makes it clear that you will not be getting it back.
+true.
+
+?- take(extension_cord).
+You have picked up the extension_cord
+true.
+
+
+?- move(e).
+You open the hatch to the east, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- use(box_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move e
+From here, you can move w
+From here, you can move d
+box_of_matches: 5 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- move(e).
+You open the hatch to the east, and crawl through.
+Your match burns out as you move between rooms.
+The room is pitch black - you cannot see!
+true.
+
+?- use(box_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a box_of_toothpicks in the room.
+From here, you can move s
+From here, you can move w
+From here, you can move d
+box_of_matches: 4 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- take(box_of_toothpicks).
+You have picked up the box_of_toothpicks
+true.
+
+?- move(d).
+You gingerly lower yourself through the hatch in the floor, straining as you 
+make your way to the wall and down the rungs of the ladder there.
+Your match burns out as you move between rooms.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move s
+From here, you can move u
+From here, you can move w
+From here, you can move n
+true.
+
+?- move(n).
+You open the hatch to the north, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, red panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a crazed_man in the room.
+From here, you can move s
+From here, you can move w
+true.
+
+?- use(crazed_man).
+The man lunges at you. He is attacking!
+true.
+
+?- i.
+You are carrying a(n) flashlight
+You are carrying a(n) book_of_matches
+You are carrying a(n) spam
+You are carrying a(n) extension_cord
+You are carrying a(n) box_of_matches
+You are carrying a(n) rusty_spoon
+You are carrying a(n) box_of_toothpicks
+false.
+
+?- use(rusty_spoon, crazed_man).
+You fight off the crazed man using only your rusty spoon. 
+
+
+The details are best left unspecified.
+true.
+
+?- move(s).
+You open the hatch to the south, and crawl through.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move s
+From here, you can move u
+From here, you can move w
+From here, you can move n
+true.
+
+?- move(u).
+You climb up the small ladder running up the wall and across the ceiling. 
+with great effort, you heave yourself through the hatch in the ceiling, emerging 
+through the floor of another room.
+The room is pitch black - you cannot see!
+true.
+
+?- use(box_of_matches).
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+From here, you can move s
+From here, you can move w
+From here, you can move d
+box_of_matches: 3 remaining.
+You light the match, and the room comes into view.
+true.
+
+?- move(s).
+You open the hatch to the south, and crawl through.
+Your match burns out as you move between rooms.
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a man in the room.
+From here, you can move n
+true.
+
+?- examine(man).
+A large man, perhaps in his late twenties.  He has just 
+begun to pick his nose. 
+
+  He appears confused.
+true.
+
+?- use(man).
+He looks up at you, index finger knuckle deep in his left nostril, and speaks: 
+'Hi! My name's Dillon. Nice ta meet ya I guess.  
+
+ I have a special place I like to 
+go to when I feel happy.  But I don't feel happy now...'
+true.
+
+?- i.
+You are carrying a(n) flashlight
+You are carrying a(n) book_of_matches
+You are carrying a(n) spam
+You are carrying a(n) extension_cord
+You are carrying a(n) box_of_matches
+You are carrying a(n) box_of_toothpicks
+false.
+
+?- use(spam, man).
+With an ear-to-ear grin, he tears open the can and slides the entire 
+brick of spam into his mouth.  Happily, he chews if for a minute or so. 
+
+
+After swallowing, he begins picking at his teeth.  He seems to be growing more 
+frustrated by the second.
+true.
+
+?- i.
+You are carrying a(n) flashlight
+You are carrying a(n) book_of_matches
+You are carrying a(n) extension_cord
+You are carrying a(n) box_of_matches
+You are carrying a(n) box_of_toothpicks
+false.
+
+?- use(box_of_toothpicks).
+You take one of the toothpicks and put it in your mouth.  You work it between your teeth 
+as you walk.
+true.
+
+?- use(box_of_toothpicks, man).
+The man says to you 'I am happy now.  Use me to get to the different place'
+true.
+
+?- use(man).
+The man exclaims, 'Wheeeeeeee!'
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its three walls are 
+aluminum panels.  Beyond the missing West wall is a black abyss stretching up and down as far as you 
+can see.  Directly to the West, about a hundred feet away, is a dimly lit door.  In front of the door 
+is a small ledge.
+There is a scaffold_apparatus in the room.
+There is a man in the room.
+true.
+
+?- examine(scaffold_apparatus).
+A large, telescoping scaffold.  It takes up most of this room.  A control 
+panel on the side has a short electrical cord emerging from it, not quite long enough to reach the 
+outlet across the room.
+true.
+
+?- use(man).
+The man exclaims, 'Wheeeeeeee!'
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its walls are 
+translucent, white panels.  There is a hatch in the center of each wall, the 
+ceiling, and the floor.  There is a series of rungs set into the 
+middle of  each wall, the ceiling, and the floor.
+There is a man in the room.
+From here, you can move n
+
+true.
+
+?- examine(inscription).
+The inscription reads 2 2 1.  It appears to be laser-etched.
+true.
+
+?- use(man).
+The man exclaims, 'Wheeeeeeee!'
+You are standing in a perfectly cubic room, about 15 feet to a side.  Its three walls are 
+aluminum panels.  Beyond the missing West wall is a black abyss stretching up and down as far as you 
+can see.  Directly to the West, about a hundred feet away, is a dimly lit door.  In front of the door 
+is a small ledge.
+There is a scaffold_apparatus in the room.
+There is a man in the room.
+
+true.
+
+?- examine(inscription).
+The inscription reads 2 2 2.  It appears to be laser-etched.
+true.
+
+?- i.
+You are carrying a(n) flashlight
+You are carrying a(n) book_of_matches
+You are carrying a(n) extension_cord
+You are carrying a(n) box_of_matches
+false.
+
+?- use(extension_cord, scaffold_apparatus).
+You plug in the apparatus, which begins deploying a walkway to the outer wall.  
+When it has reached the far side, you and Dillon eagerly make your way across the chasm 
+and to the exterior door beyond which, hopefully, freedom awaits...
+
+
+ YOU WIN! 
+You may continue to explore the map if you wish, but the game is over. Congratulations.
+true.
+
+

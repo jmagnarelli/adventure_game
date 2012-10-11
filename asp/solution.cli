@@ -1,0 +1,95 @@
+#const width=21.
+#const length=42.
+#const num_mines=20.
+#const num_bases=4.
+#const base_dist=10.
+#const num_volcanoes=5.
+#const volcano_radius=7.
+
+dim(1..width).
+
+%3*width*width/4 { solid(X,Y) :dim(X) :dim(Y) }.
+
+num_volcanoes { volcano(X,Y) :dim(X) :dim(Y)  } num_volcanoes.
+num_mines { mine(X,Y) :dim(X) :dim(Y) } num_mines.
+{ solid(X,Y) } :- dim(X), dim(Y), not mine(X,Y).
+%{ solid(X,Y), mine(X,Y) } :- dim(X), dim(Y).
+%:- not mines { mine(X,Y) }.
+
+lava(X,Y,0) :- volcano(X,Y), solid(X,Y).
+lava(NX,NY, T+1) :-
+	lava(X,Y, T),
+	T < volcano_radius,
+	solid(NX,NY),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY,
+	solid(NX,NY).
+
+islava(X,Y) :- lava(X,Y,volcano_radius).
+	
+	
+	
+
+start(1,1).
+bases(num_bases).
+finish(width,width).
+step(0,-1 ;; 0,1 ;; 1,0 ;; -1,0).
+
+%bases
+%1 { base(X,Y,N) :dim(X;Y) :solid(X,Y) :reachable(X,Y) } 1 :- bases(B), N = 1..B.
+%base(X,Y) :- 
+
+%others_distant(X,Y,D) :- 
+%	base(A,B),
+	
+
+%base(X,Y) :- dim(X;Y), solid(X,Y), reachable(X,Y), others_distant(X,Y, base_dist).
+%num_bases { base(X,Y) :dim(X) :dim(Y) }.
+
+reachable(X,Y) :- start(X,Y), solid(X,Y).
+
+reachable(NX,NY) :-
+	reachable(X,Y),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY,
+	solid(NX,NY).
+
+%river_tile(X,Y) :- 
+%	X is width 
+
+%mine(X,Y) :- dim(X;Y), solid(X,Y).
+%mines { mine(X,Y) :dim(X) :dim(Y) }.
+%:- not mines { mine(X,Y) }.
+
+
+
+at(X,Y, 0) :- start(X,Y), solid(X,Y).
+at(NX,NY, T+1) :-
+	at(X,Y, T),
+	T < length,
+	solid(NX,NY),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY,
+	solid(NX,NY).
+
+complete :- finish(X,Y), reachable(X,Y).
+speedrun :- finish(X,Y), at(X,Y,T).
+
+
+
+
+
+
+
+%lake(X,Y) :- dim(X;Y), solid(X+DX,Y+DY):step(DX,DY), not solid(X,Y).
+%:- not 35 { lake(X,Y) }.
+
+
+
+
+%:- bases_reachable.
+:- speedrun.
+:- not complete.
