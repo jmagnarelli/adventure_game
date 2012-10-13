@@ -8,33 +8,39 @@
 
 dim(1..width).
 
-%3*width*width/4 { solid(X,Y) :dim(X) :dim(Y) }.
-
-num_volcanoes { volcano(X,Y) :dim(X) :dim(Y)  } num_volcanoes.
-num_mines { mine(X,Y) :dim(X) :dim(Y) } num_mines.
-{ solid(X,Y) } :- dim(X), dim(Y), not mine(X,Y).
-%{ solid(X,Y), mine(X,Y) } :- dim(X), dim(Y).
-%:- not mines { mine(X,Y) }.
-
-lava(X,Y,0) :- volcano(X,Y), solid(X,Y).
-lava(NX,NY, T+1) :-
-	lava(X,Y, T),
-	T < volcano_radius,
-	solid(NX,NY),
-	step(DX,DY),
-	NX = X + DX,
-	NY = Y + DY,
-	solid(NX,NY).
-
-islava(X,Y) :- lava(X,Y,volcano_radius).
-	
-	
-	
-
 start(1,1).
 bases(num_bases).
 finish(width,width).
 step(0,-1 ;; 0,1 ;; 1,0 ;; -1,0).
+%3*width*width/4 { solid(X,Y) :dim(X) :dim(Y) }.
+
+num_volcanoes { volcano(X,Y) :dim(X) :dim(Y)  } num_volcanoes.
+num_mines { mine(X,Y) :dim(X) :dim(Y) } num_mines.
+%lava(X,Y,0) :- volcano(X,Y).%, solid(X,Y).
+lava(NX,NY,0) :- volcano(X,Y),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY.%, solid(X,Y).
+lava(NX,NY, T+1) :-
+	lava(X,Y, T),
+	T < volcano_radius,
+%	solid(NX,NY),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY,
+	dim(NX),
+	dim(NY).
+%	solid(NX,NY).
+
+islava(X,Y) :- lava(X,Y,volcano_radius).
+{ solid(X,Y) } :- dim(X), dim(Y), not mine(X,Y), not volcano(X,Y), not lava(X,Y).
+%{ solid(X,Y), mine(X,Y) } :- dim(X), dim(Y).
+%:- not mines { mine(X,Y) }.
+
+	
+	
+	
+
 
 %bases
 %1 { base(X,Y,N) :dim(X;Y) :solid(X,Y) :reachable(X,Y) } 1 :- bases(B), N = 1..B.

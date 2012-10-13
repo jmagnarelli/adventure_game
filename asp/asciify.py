@@ -27,7 +27,7 @@ def display_maze(facts):
         mine[pos] = True
       if functor == "volcano":
         volcano[pos] = True
-      if functor == "is_lava":
+      if functor == "islava":
         lava[pos] = True
 
   def code(x,y):
