@@ -22,7 +22,7 @@ lava(NX,NY,0) :- volcano(X,Y),
 	NY = Y + DY.%, solid(X,Y).
 lava(NX,NY, T+1) :-
 	lava(X,Y, T),
-	T < volcano_radius,
+	T < (volcano_radius - 1),
 	step(DX,DY),
 	NX = X + DX,
 	NY = Y + DY,
