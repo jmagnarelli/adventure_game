@@ -1,19 +1,26 @@
-#const width=12.
-#const length=42.
-#const num_mines=3.
-#const num_bases=1.
-#const base_base_rad=10.
-#const base_mine_rad=3.
-#const num_volcanoes=1.
-#const volcano_radius=1.
+%this is a submission for assignment2 by James Magnarelli (jmagnare@gmail.com)
 
+#const width=24. %how wide the map is
+#const length=48. %how long the path through it should be
+#const num_mines=3. 
+#const num_bases=1.
+#const base_base_rad=10. %how far between bases
+#const base_mine_rad=3. %how far between bases and mines
+#const num_volcanoes=3.
+#const volcano_radius=2. %how far around volcanoes should the lava go?
+
+%portions of this are adapted from the tutorial linked in the assignment
 dim(1..width).
 
+%start at top left corner
 start(1,1).
 finish(width,width).
 step(0,-1 ;; 0,1 ;; 1,0 ;; -1,0).
 
+%generate volcanoes - they can be anywhere, not just solid land
 num_volcanoes { volcano(X,Y) :dim(X) :dim(Y)  } num_volcanoes.
+%lava must be around a volcano.  This steps inward (via the second rule)
+%and marks off lava
 lava(NX,NY,0) :- volcano(X,Y),
 	step(DX,DY),
 	NX = X + DX,
@@ -26,78 +33,18 @@ lava(NX,NY, T+1) :-
 	NY = Y + DY,
 	dim(NX),
 	dim(NY).
+%seed the lava() rule
+islava(X,Y) :- lava(X,Y,I), dim(X;Y).
+
+%place some mines - they can go anywhere
 num_mines { mine(X,Y) :dim(X) :dim(Y) } num_mines.
 
-%the following inspired by the at rule in the tutorial, and posts on Piazza
-
-%*
-check_base_distance(X0,Y0,X1,Y1,0) :-
-	dim(X0;Y0;X1;Y1),
-	base(X0,Y0),
-	X0 = X1,
-	Y0 = Y1.
-check_base_distance(X0,Y0,X1,Y1,D+1) :-
-	check_base_distance(X0,Y0,NX1,NY1,D),
-	dim(X0;Y0;X1;Y1;NX1;NY1),
-	base(X0,Y0),
-	not base(X1,Y1),
-	step(DX,DY),
-	NX1 = X1 + DX,
-	NY1 = Y1 + DY.
-
-check_mine_distance(X0,Y0,X1,Y1,0) :-
-	dim(X0;Y0;X1;Y1),
-	base(X0,Y0),
-	X0 = X1,
-	Y0 = Y1.
-check_mine_distance(X0,Y0,X1,Y1,D+1) :-
-	check_mine_distance(X0,Y0,NX1,NY1,D),
-	dim(X0;Y0;X1;Y1;NX1;NY1),
-	base(X0,Y0),
-	not mine(X1,Y1),
-	step(DX,DY),
-	NX1 = X1 + DX,
-	NY1 = Y1 + DY.
-
-bases_too_close(X,Y) :-
-	dim(X;Y;NX;NY),
-	base(NX,NY),
-	not check_base_distance(X,Y,NX,NY,base_base_rad).
-base_near_lava(X,Y) :-
-	dim(X;Y;NX;NY),
-	islava(NX,NY),
-	not check_mine_distance(X,Y,NX,NY,base_mine_rad).
-*%
-%*
-no_base_mine(NX,NY,0) :- mine(X,Y),
-	step(DX,DY),
-	NX = X + DX,
-	NY = Y + DY.%, solid(X,Y).
-no_base_base(NX,NY,1) :- base(X,Y),
-	step(DX,DY),
-	NX = X + DX,
-	NY = Y + DY.%, solid(X,Y).
-no_base_mine(NX,NY, T+1) :-
-	no_base_mine(X,Y,T),
-	step(DX,DY),
-	T < (base_mine_rad - 1),
-	NX = X + DX,
-	NY = Y + DY,
-	dim(NX),
-	dim(NY).
-no_base_base(NX,NY, T+1) :-
-	no_base_base(X,Y,T),
-	step(DX,DY),
-	T < (base_base_rad - 1),
-	NX = X + DX,
-	NY = Y + DY,
-	dim(NX),
-	dim(NY).
-*%
+%this rule checks whether a base cannot be placed at X,Y because
+%of another base
 no_base_base(X,Y) :-
 	dim(X;Y;X1;Y1),
 	base(X1,Y1),
-	X != X1,
+	X != X1, %if this base itself is at X,Y, then it's okay
 	Y != Y1,
 	base_base_rad > #abs(X - X1).
 no_base_base(X,Y) :-
@@ -106,6 +53,8 @@ no_base_base(X,Y) :-
 	X != X1,
 	Y != Y1,
 	base_base_rad > #abs(Y - Y1).
+
+%the same as the above rule, but for mines.
 no_base_mine(X,Y) :-
 	dim(X;Y;X1;Y1),
 	mine(X1,Y1),
@@ -114,28 +63,36 @@ no_base_mine(X,Y) :-
 	dim(X;Y;X1;Y1),
 	mine(X1,Y1),
 	base_mine_rad > #abs(Y - Y1).
+
+%locations that are no good for bases (for whatever reason) will be marked no_base
+%(for simplicity)
 no_base(X,Y) :- dim(X;Y), no_base_base(X,Y).
 no_base(X,Y) :- dim(X;Y), no_base_mine(X,Y).
 
-%If the position is reachable, and it's not lava or a volcano, it is valid
+%If the position is reachable, and it's not lava or a volcano, and its
+%not a no_base, we can put a base there
 base_validator(X,Y) :- dim(X;Y),
 	reachable(X,Y),
 	not islava(X,Y),
 	not volcano(X,Y),
 	not no_base(X,Y).
-%{ base(X,Y) } :- base_validator(X,Y).
+%actually generate bases
 num_bases { base(X,Y) :dim(X) :dim(Y) } num_bases.
+%check that they're all valid
 :- dim(X;Y), base(X,Y), not base_validator(X,Y).
+%ensure that there are num_bases bases
 :- not num_bases { base(X,Y) }.
 
 	
-islava(X,Y) :- lava(X,Y,I), dim(X;Y).%volcano_radius).
+%mark off solid land.
 { solid(X,Y) } :- dim(X), dim(Y), not mine(X,Y), not volcano(X,Y), not islava(X,Y).
+%ensure that the lava placement is all correct
 lava_integrity :- islava(X,Y), not solid(X,Y), dim(X;Y).
 :- not lava_integrity.
 	
+%the start square is reachable
 reachable(X,Y) :- start(X,Y), solid(X,Y).
-
+%everything else is reachable if we can step to the start square
 reachable(NX,NY) :-
 	reachable(X,Y),
 	step(DX,DY),
@@ -143,6 +100,8 @@ reachable(NX,NY) :-
 	NY = Y + DY,
 	solid(NX,NY).
 
+%from the tutorial - only used in the speedrun rule, to make sure that the map
+%is large enough
 at(X,Y, 0) :- start(X,Y), solid(X,Y).
 at(NX,NY, T+1) :-
 	at(X,Y, T),
