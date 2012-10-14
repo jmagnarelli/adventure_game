@@ -1,16 +1,15 @@
 #const width=12.
 #const length=42.
 #const num_mines=3.
-#const num_bases=4.
+#const num_bases=1.
 #const base_base_rad=10.
-#const base_lava_rad=3.
+#const base_mine_rad=3.
 #const num_volcanoes=1.
 #const volcano_radius=1.
 
 dim(1..width).
 
 start(1,1).
-bases(num_bases).
 finish(width,width).
 step(0,-1 ;; 0,1 ;; 1,0 ;; -1,0).
 
@@ -30,56 +29,111 @@ lava(NX,NY, T+1) :-
 num_mines { mine(X,Y) :dim(X) :dim(Y) } num_mines.
 
 %the following inspired by the at rule in the tutorial, and posts on Piazza
-check_distance(X0,Y0,X1,Y1,D) :-
+
+%*
+check_base_distance(X0,Y0,X1,Y1,0) :-
+	dim(X0;Y0;X1;Y1),
+	base(X0,Y0),
 	X0 = X1,
 	Y0 = Y1.
-check_distance(X0,Y0,X1,Y1,D+1) :-
-	check_distance(X0,Y0,NX1,NY1,D),
+check_base_distance(X0,Y0,X1,Y1,D+1) :-
+	check_base_distance(X0,Y0,NX1,NY1,D),
+	dim(X0;Y0;X1;Y1;NX1;NY1),
+	base(X0,Y0),
+	not base(X1,Y1),
 	step(DX,DY),
 	NX1 = X1 + DX,
-	NY1 = Y1 + DY,
-	dim(NX1),
-	dim(NY1).
+	NY1 = Y1 + DY.
+
+check_mine_distance(X0,Y0,X1,Y1,0) :-
+	dim(X0;Y0;X1;Y1),
+	base(X0,Y0),
+	X0 = X1,
+	Y0 = Y1.
+check_mine_distance(X0,Y0,X1,Y1,D+1) :-
+	check_mine_distance(X0,Y0,NX1,NY1,D),
+	dim(X0;Y0;X1;Y1;NX1;NY1),
+	base(X0,Y0),
+	not mine(X1,Y1),
+	step(DX,DY),
+	NX1 = X1 + DX,
+	NY1 = Y1 + DY.
+
+bases_too_close(X,Y) :-
+	dim(X;Y;NX;NY),
+	base(NX,NY),
+	not check_base_distance(X,Y,NX,NY,base_base_rad).
+base_near_lava(X,Y) :-
+	dim(X;Y;NX;NY),
+	islava(NX,NY),
+	not check_mine_distance(X,Y,NX,NY,base_mine_rad).
+*%
+%*
+no_base_mine(NX,NY,0) :- mine(X,Y),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY.%, solid(X,Y).
+no_base_base(NX,NY,1) :- base(X,Y),
+	step(DX,DY),
+	NX = X + DX,
+	NY = Y + DY.%, solid(X,Y).
+no_base_mine(NX,NY, T+1) :-
+	no_base_mine(X,Y,T),
+	step(DX,DY),
+	T < (base_mine_rad - 1),
+	NX = X + DX,
+	NY = Y + DY,
+	dim(NX),
+	dim(NY).
+no_base_base(NX,NY, T+1) :-
+	no_base_base(X,Y,T),
+	step(DX,DY),
+	T < (base_base_rad - 1),
+	NX = X + DX,
+	NY = Y + DY,
+	dim(NX),
+	dim(NY).
+*%
+no_base_base(X,Y) :-
+	dim(X;Y;X1;Y1),
+	base(X1,Y1),
+	X != X1,
+	Y != Y1,
+	base_base_rad > #abs(X - X1).
+no_base_base(X,Y) :-
+	dim(X;Y;X1;Y1),
+	base(X1,Y1),
+	X != X1,
+	Y != Y1,
+	base_base_rad > #abs(Y - Y1).
+no_base_mine(X,Y) :-
+	dim(X;Y;X1;Y1),
+	mine(X1,Y1),
+	base_mine_rad > #abs(X - X1).
+no_base_mine(X,Y) :-
+	dim(X;Y;X1;Y1),
+	mine(X1,Y1),
+	base_mine_rad > #abs(Y - Y1).
+no_base(X,Y) :- dim(X;Y), no_base_base(X,Y).
+no_base(X,Y) :- dim(X;Y), no_base_mine(X,Y).
+
+%If the position is reachable, and it's not lava or a volcano, it is valid
+base_validator(X,Y) :- dim(X;Y),
+	reachable(X,Y),
+	not islava(X,Y),
+	not volcano(X,Y),
+	not no_base(X,Y).
+%{ base(X,Y) } :- base_validator(X,Y).
+num_bases { base(X,Y) :dim(X) :dim(Y) } num_bases.
+:- dim(X;Y), base(X,Y), not base_validator(X,Y).
+:- not num_bases { base(X,Y) }.
+
 	
-
-
 islava(X,Y) :- lava(X,Y,I), dim(X;Y).%volcano_radius).
 { solid(X,Y) } :- dim(X), dim(Y), not mine(X,Y), not volcano(X,Y), not islava(X,Y).
 lava_integrity :- islava(X,Y), not solid(X,Y), dim(X;Y).
 :- not lava_integrity.
-
-bases_too_close(X,Y) :-
-	dim(NX;NY),
-	base(NX,NY),
-	not check_distance(X,Y,NX,NY,base_base_rad).
-base_near_lava(X,Y) :-
-	dim(NX,NY),
-	islava(NX,NY),
-	not(check_distance(X,Y,NX,NY,base_lava_rad).
-
-%If the position is reachable, and it's not lava or a volcano, it is valid
-base_positioner(X,Y) :- reachable(X,Y),
-	not islava(X,Y),
-	not volcano(X,Y),
-	not bases_too_close(X,Y).
-{ base(X,Y) } :- base_positioner(X,Y), dim(X;Y).
-:- not num_bases { base(X,Y) }.
 	
-	
-	
-
-
-%bases
-%1 { base(X,Y,N) :dim(X;Y) :solid(X,Y) :reachable(X,Y) } 1 :- bases(B), N = 1..B.
-%base(X,Y) :- 
-
-%others_distant(X,Y,D) :- 
-%	base(A,B),
-	
-
-%base(X,Y) :- dim(X;Y), solid(X,Y), reachable(X,Y), others_distant(X,Y, base_dist).
-%num_bases { base(X,Y) :dim(X) :dim(Y) }.
-
 reachable(X,Y) :- start(X,Y), solid(X,Y).
 
 reachable(NX,NY) :-
@@ -88,15 +142,6 @@ reachable(NX,NY) :-
 	NX = X + DX,
 	NY = Y + DY,
 	solid(NX,NY).
-
-%river_tile(X,Y) :- 
-%	X is width 
-
-%mine(X,Y) :- dim(X;Y), solid(X,Y).
-%mines { mine(X,Y) :dim(X) :dim(Y) }.
-%:- not mines { mine(X,Y) }.
-
-
 
 at(X,Y, 0) :- start(X,Y), solid(X,Y).
 at(NX,NY, T+1) :-
@@ -111,18 +156,5 @@ at(NX,NY, T+1) :-
 complete :- finish(X,Y), reachable(X,Y).
 speedrun :- finish(X,Y), at(X,Y,T).
 
-
-
-
-
-
-
-%lake(X,Y) :- dim(X;Y), solid(X+DX,Y+DY):step(DX,DY), not solid(X,Y).
-%:- not 35 { lake(X,Y) }.
-
-
-
-
-%:- bases_reachable.
 :- speedrun.
 :- not complete.

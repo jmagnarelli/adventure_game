@@ -22,6 +22,8 @@ def display_maze(facts):
       x, y = int(x), int(y)
       pos = (x,y)
       max_x, max_y = max(x, max_x), max(y, max_y)
+      if functor == "base":
+        base[pos] = True
       if functor == "solid":
         solid[pos] = True
       if functor == "mine":
@@ -30,22 +32,20 @@ def display_maze(facts):
         volcano[pos] = True
       if functor == "islava":
         lava[pos] = True
-      if functor == "base":
-        base[pos] = True
 
   def code(x,y):
     """decide how a maze cell should be typeset"""
     pos = (x,y)
-    if pos in solid:
-      return "x"
+    if pos in base:
+      return "b"
     elif pos in mine:
       return "m"
     elif pos in volcano:
       return "v"
     elif pos in lava:
       return "l"
-    elif pos in base:
-      return "b"
+    elif pos in solid:
+      return "x"
     else:
       return "."
 
