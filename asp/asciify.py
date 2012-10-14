@@ -13,6 +13,7 @@ def display_maze(facts):
   mine = {}
   lava = {}
   volcano = {}
+  base = {}
 
   for fact in facts:
     m = binary_term.match(fact)
@@ -29,6 +30,8 @@ def display_maze(facts):
         volcano[pos] = True
       if functor == "islava":
         lava[pos] = True
+      if functor == "base":
+        base[pos] = True
 
   def code(x,y):
     """decide how a maze cell should be typeset"""
@@ -41,6 +44,8 @@ def display_maze(facts):
       return "v"
     elif pos in lava:
       return "l"
+    elif pos in base:
+      return "b"
     else:
       return "."
 
